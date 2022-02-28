@@ -1,9 +1,9 @@
 import longText from '../cmps/long-text.cmp.js';
+import { bookService } from '../services/book-service.js';
 
 export default {
-    props: ['book'],
     template: `
-        <section class="book-details">
+        <section v-if="book" class="book-details">
             <h4>Book details</h4>
             <img :src="bookImgUrl">
             <p class="title" >{{book.title}}</p>
@@ -16,6 +16,7 @@ export default {
                 <long-text :txt="book.description"></long-text>
             </div>
             <button class="close" @click="$emit('close')">X</button>
+            <router-link to="/book">Back to books</router-link>
 
         </section>
     `,
@@ -24,8 +25,15 @@ export default {
         return {
             isOnSale: null,
             txt: 100,
+            book: null,
 
         }
+    },
+
+    created() {
+        const id = this.$route.params.bookId;
+        bookService.get(id)
+            .then(book => this.book = book);
     },
 
     methods: {

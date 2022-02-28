@@ -14,34 +14,26 @@ export const bookService = {
 };
 
 function query() {
-    utilService.saveToStorage(BOOKS_KEY, getBooksFromApi());
-    return utilService.loadFromStorage(BOOKS_KEY);
-    // return getBooksFromApi()
+  return storageService.query(BOOKS_KEY);
 }
 
 function remove(bookId) {
-    const books = query();
-    const idx = books.findIndex(book => book.id === bookId);
-    books.splice(idx, 1);
-    utilService.saveToStorage(BOOKS_KEY, books);
+  return storageService.remove(BOOKS_KEY, bookId);
+}
+
+function get(bookId) {
+  return storageService.get(BOOKS_KEY, bookId);
 }
 
 function save(book) {
-    book.id = utilService.makeId();
-    const books = query();
-    books.push(book);
-    utilService.saveToStorage(BOOKS_KEY, books);
-    return book;
+  if (book.id) return storageService.put(BOOKS_KEY, book);
+  else return storageService.post(BOOKS_KEY, book);
 }
 
 function _createBooks() {
     let books = utilService.loadFromStorage(BOOKS_KEY);
     if (!books || !books.length) {
-        books = [];
-        books.push(_createBook('Alice From Wonderland', 'Someone'));
-        books.push(_createBook('Spongebob From The Ocean', 'A person'));
-        books.push(_createBook('2Pac From The Hood', 'A Person'));
-        books.push(_createBook('Bibi From The Illuminati', 'Someone'));
+        books = getBooksFromApi()
         utilService.saveToStorage(BOOKS_KEY, books);
     }
     return books;

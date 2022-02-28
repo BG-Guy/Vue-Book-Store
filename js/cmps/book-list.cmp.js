@@ -9,7 +9,10 @@ export default {
                    <book-preview :book="book" />
                    <div class="actions">
                        <button @click="remove(book.id)">X</button>
-                       <button @click="select(book)">Details</button>
+                       <!-- <button @click="select(book)">Details</button> -->
+                       <router-link :to="'/book/'+book.id">Details</router-link>
+                       <router-link :to="'/book/edit/'+book.id">Edit</router-link>
+
                    </div>
                 </li>
             </ul>

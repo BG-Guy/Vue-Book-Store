@@ -1,4 +1,5 @@
 import { bookService } from '../services/book-service.js';
+import { eventBus } from '../services/eventBus-service.js';
 import bookFilter from '../cmps/book-filter.cmp.js';
 import bookList from '../cmps/book-list.cmp.js';
 import bookDetails from './book-details.cmp.js';
@@ -21,16 +22,29 @@ export default {
     },
     data() {
         return {
-            books: bookService.query(),
+            books: null,
             selectedBook: null,
             filterBy: null
         };
     },
+    created() {
+        bookService.query()
+            .then(books => this.books = books)
+        
+    },
+
     methods: {
         removeBook(id) {
-            bookService.remove(id);
-            const idx = this.books.findIndex((book) => book.id === id);
-            this.books.splice(idx, 1);
+            bookService.remove(id)
+            .then(() => {
+                const idx = this.cars.findIndex((car) => car.id === id);
+                this.cars.splice(idx, 1);
+                eventBus.emit('show-msg', { txt: 'Deleted succesfully', type: 'success' });
+            })
+            .catch(err => {
+                console.error(err);
+                eventBus.emit('show-msg', { txt: 'Error - please try again later', type: 'error' });
+            });
         },
         selectBook(book) {
             this.selectedBook = book;

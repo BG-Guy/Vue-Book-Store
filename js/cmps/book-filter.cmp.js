@@ -4,9 +4,9 @@ export default {
 
             <label>
             Search
-            <input @input="setFilter" type="" v-model="filterBy.byName" placeholder="Search...">
+            <input @input="setFilter" ref="nameInput" type="text" v-model="filterBy.byName" placeholder="Search...">
             <div>
-            Price {{ filterBy.toPrice }}<input @input="setFilter" v-model="filterBy.toPrice" type="range" min="0" max="200" > 
+            Price {{ filterBy.toPrice }}<input @input="setFilter" ref="priceInput" v-model="filterBy.toPrice" type="range" min="0" max="200" > 
             </div>    
         </label>
         </section>
@@ -21,6 +21,13 @@ export default {
             }
         };
     },
+
+    mounted(){
+        this.$refs.nameInput.focus()
+        this.$refs.priceInput.focus()
+    },
+
+
     methods: {
         setFilter() {
             this.$emit('filtered', this.filterBy);
